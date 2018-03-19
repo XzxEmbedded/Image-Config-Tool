@@ -14,7 +14,6 @@ mount_img() {
 git_pyserial_scripts() {
     cd ./mount/home/pi
     git clone https://github.com/XzxEmbedded/pyserial.git
-    sleep 1
     git clone https://github.com/XzxEmbedded/miner-automate-test-scripts.git
     cd ../../../
     sleep 1
@@ -26,6 +25,14 @@ network_config() {
     cat network.conf | grep interface >> ./mount/etc/dhcpcd.conf
     cat network.conf | grep ip_address >> ./mount/etc/dhcpcd.conf
     sudo chmod 664 ./mount/etc/dhcpcd.conf
+    sleep 1
+}
+
+# Start ssh
+start_ssh() {
+    sudo sed -i '19 a \\t' ./mount/etc/rc.local
+    sudo sed -i '19 a sudo /etc/init.d/ssh start' ./mount/etc/rc.local
+    sleep 1
 }
 
 # Umount img file
@@ -46,11 +53,14 @@ do
         --network)
             network_config
             ;;
+        --ssh)
+            start_ssh
+            ;;
         --umount)
             umount_img
             ;;
         --all)
-            mount_img && git_pyserial_scripts && network_config && umount_img
+            mount_img && git_pyserial_scripts && network_config && start_ssh && umount_img
             ;;
         *)
             ;;
