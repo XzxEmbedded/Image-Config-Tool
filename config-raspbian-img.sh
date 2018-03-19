@@ -10,22 +10,26 @@ mount_img() {
     sleep 1
 }
 
-# Git pyserial
-git_pyserial() {
+# Git pyserial and auto test scripts
+git_pyserial_scripts() {
     cd ./mount/home/pi
     git clone https://github.com/XzxEmbedded/pyserial.git
     sleep 1
+    git clone https://github.com/XzxEmbedded/miner-automate-test-scripts.git
+    cd ../../../
+    sleep 1
 }
 
-# Git miner-automate-test-scripts
-git_scripts() {
-    git clone https://github.com/XzxEmbedded/miner-automate-test-scripts.git
-    sleep 1
+# Network config
+network_config() {
+    sudo chmod 777 ./mount/etc/dhcpcd.conf
+    cat network.conf | grep interface >> ./mount/etc/dhcpcd.conf
+    cat network.conf | grep ip_address >> ./mount/etc/dhcpcd.conf
+    sudo chmod 664 ./mount/etc/dhcpcd.conf
 }
 
 # Umount img file
 umount_img() {
-    cd ../../../
     sudo umount ./mount
     rm -fr ./mount
 }
@@ -36,17 +40,17 @@ do
         --mount)
             mount_img
             ;;
-        --serial)
-            git_pyserial
+        --git)
+            git_pyserial_scripts
             ;;
-        --scripts)
-            git_scripts
+        --network)
+            network_config
             ;;
         --umount)
             umount_img
             ;;
         --all)
-            mount_img && git_pyserial && git_scripts && umount_img
+            mount_img && git_pyserial_scripts && network_config && umount_img
             ;;
         *)
             ;;
