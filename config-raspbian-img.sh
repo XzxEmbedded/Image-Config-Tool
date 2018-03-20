@@ -41,6 +41,19 @@ umount_img() {
     rm -fr ./mount
 }
 
+# Help
+show_help() {
+    echo "\
+    --help          Display help message
+    --mount         Mount img file
+    --git           After img file, git clone pyserial and auto test scripts
+    --network       After img file, setting network
+    --ssh           After img file, setting ssh
+    --umount        Umount img file
+    --all           Run all steps
+    "
+}
+
 for conf in "$@"
 do
     case $conf in
@@ -62,7 +75,11 @@ do
         --all)
             mount_img && git_pyserial_scripts && network_config && start_ssh && umount_img
             ;;
+        --help)
+            show_help
+            ;;
         *)
+            show_help
             ;;
     esac
 done
