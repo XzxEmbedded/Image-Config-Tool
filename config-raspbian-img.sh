@@ -50,6 +50,11 @@ install_pyserial() {
     sudo sed -i '24 a sudo python setup.py install' ./mount/etc/rc.local
 }
 
+# Config ssh_config
+ssh_config() {
+    sudo sed -i '35 a StrictHostKeyChecking no' ./mount/etc/ssh/ssh_config
+}
+
 # Umount img file
 umount_img() {
     sudo umount ./mount
@@ -90,11 +95,14 @@ do
         --pyserial)
             install_pyserial
             ;;
+        --key)
+            ssh_config
+            ;;
         --umount)
             umount_img
             ;;
         --all)
-            mount_img && git_pyserial_scripts && start_ssh && install_expect && install_pyserial && umount_img
+            mount_img && git_pyserial_scripts && start_ssh && install_expect && install_pyserial && ssh_config && umount_img
             ;;
         --help)
             show_help
