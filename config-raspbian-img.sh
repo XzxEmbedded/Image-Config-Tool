@@ -21,10 +21,10 @@ git_pyserial_scripts() {
 
 # Network config
 network_config() {
-    sudo chmod 777 ./mount/etc/dhcpcd.conf
-    cat network.conf | grep interface >> ./mount/etc/dhcpcd.conf
-    cat network.conf | grep ip_address >> ./mount/etc/dhcpcd.conf
-    sudo chmod 664 ./mount/etc/dhcpcd.conf
+    interface=`cat network.conf | grep interface`
+    sudo sed -i "39 a $interface" ./mount/etc/dhcpcd.conf
+    ip=`cat network.conf | grep ip_address`
+    sudo sed -i "40 a $ip" ./mount/etc/dhcpcd.conf
     sleep 1
 }
 
@@ -32,6 +32,13 @@ network_config() {
 start_ssh() {
     sudo sed -i '19 a \\t' ./mount/etc/rc.local
     sudo sed -i '19 a sudo /etc/init.d/ssh start' ./mount/etc/rc.local
+    sleep 1
+}
+
+# Install expect
+install_expect() {
+    sudo sed -i '21 a \\t' ./mount/etc/rc.local
+    sudo sed -i '21 a sudo apt-get install expect -y' ./mount/etc/rc.local
     sleep 1
 }
 
@@ -69,11 +76,14 @@ do
         --ssh)
             start_ssh
             ;;
+        --expect)
+            install_expect
+            ;;
         --umount)
             umount_img
             ;;
         --all)
-            mount_img && git_pyserial_scripts && network_config && start_ssh && umount_img
+            mount_img && git_pyserial_scripts && start_ssh && install_expect && umount_img
             ;;
         --help)
             show_help
