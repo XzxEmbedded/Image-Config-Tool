@@ -42,6 +42,14 @@ install_expect() {
     sleep 1
 }
 
+# Install pyserial
+install_pyserial() {
+    sudo sed -i '23 a \\t' ./mount/etc/rc.local
+    dir="cd /home/pi/pyserial"
+    sudo sed -i "23 a $dir" ./mount/etc/rc.local
+    sudo sed -i '24 a sudo python setup.py install' ./mount/etc/rc.local
+}
+
 # Umount img file
 umount_img() {
     sudo umount ./mount
@@ -79,11 +87,14 @@ do
         --expect)
             install_expect
             ;;
+        --pyserial)
+            install_pyserial
+            ;;
         --umount)
             umount_img
             ;;
         --all)
-            mount_img && git_pyserial_scripts && start_ssh && install_expect && umount_img
+            mount_img && git_pyserial_scripts && start_ssh && install_expect && install_pyserial && umount_img
             ;;
         --help)
             show_help
