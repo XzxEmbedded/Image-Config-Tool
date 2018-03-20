@@ -19,17 +19,8 @@ git_pyserial_scripts() {
     sleep 1
 }
 
-# Network config
-network_config() {
-    interface=`cat network.conf | grep interface`
-    sudo sed -i "39 a $interface" ./mount/etc/dhcpcd.conf
-    ip=`cat network.conf | grep ip_address`
-    sudo sed -i "40 a $ip" ./mount/etc/dhcpcd.conf
-    sleep 1
-}
-
 # Start ssh
-start_ssh() {
+ssh_start() {
     sudo sed -i '19 a \\t' ./mount/etc/rc.local
     sudo sed -i '19 a sudo /etc/init.d/ssh start' ./mount/etc/rc.local
     sleep 1
@@ -48,11 +39,22 @@ install_pyserial() {
     dir="cd /home/pi/pyserial"
     sudo sed -i "23 a $dir" ./mount/etc/rc.local
     sudo sed -i '24 a sudo python setup.py install' ./mount/etc/rc.local
+    sleep 1
 }
 
 # Config ssh_config
 ssh_config() {
     sudo sed -i '35 a StrictHostKeyChecking no' ./mount/etc/ssh/ssh_config
+    sleep 1
+}
+
+# Network config
+network_config() {
+    interface=`cat network.conf | grep interface`
+    sudo sed -i "39 a $interface" ./mount/etc/dhcpcd.conf
+    ip=`cat network.conf | grep ip_address`
+    sudo sed -i "40 a $ip" ./mount/etc/dhcpcd.conf
+    sleep 1
 }
 
 # Umount img file
@@ -64,13 +66,16 @@ umount_img() {
 # Help
 show_help() {
     echo "\
-    --help          Display help message
     --mount         Mount img file
     --git           After img file, git clone pyserial and auto test scripts
-    --network       After img file, setting network
     --ssh           After img file, setting ssh
+    --expect        After img file, install expect
+    --pyserial      After img file, install pyserial
+    --hostkey       After img file, setting ssh_config
+    --network       After img file, setting network
     --umount        Umount img file
     --all           Run all steps
+    --help          Display help message
     "
 }
 
@@ -83,9 +88,6 @@ do
         --git)
             git_pyserial_scripts
             ;;
-        --network)
-            network_config
-            ;;
         --ssh)
             start_ssh
             ;;
@@ -95,14 +97,18 @@ do
         --pyserial)
             install_pyserial
             ;;
-        --key)
+        --hostkey)
             ssh_config
+            ;;
+        --network)
+            network_config
             ;;
         --umount)
             umount_img
             ;;
         --all)
-            mount_img && git_pyserial_scripts && start_ssh && install_expect && install_pyserial && ssh_config && umount_img
+            mount_img && git_pyserial_scripts && ssh_start && install_expect && install_pyserial &&
+            ssh_config && network_config && umount_img
             ;;
         --help)
             show_help
