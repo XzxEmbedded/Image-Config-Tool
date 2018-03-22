@@ -50,10 +50,10 @@ ssh_config() {
 
 # Network config
 network_config() {
-    interface=`cat network.conf | grep interface`
-    sudo sed -i "39 a $interface" ./mount/etc/dhcpcd.conf
-    ip=`cat network.conf | grep ip_address`
-    sudo sed -i "40 a $ip" ./mount/etc/dhcpcd.conf
+    cp ./network.conf ./mount/home/pi
+    cp ./network.sh ./mount/home/pi
+    sudo sed -i '26 a \\t' ./mount/etc/rc.local
+    sudo sed -i '26 a sh /home/pi/network.sh' ./mount/etc/rc.local
     sleep 1
 }
 
