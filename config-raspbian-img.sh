@@ -38,7 +38,7 @@ install_pyserial() {
     sudo sed -i '23 a \\t' ./mount/etc/rc.local
     dir="cd /home/pi/pyserial"
     sudo sed -i "23 a $dir" ./mount/etc/rc.local
-    sudo sed -i '24 a sudo python setup.py install' ./mount/etc/rc.local
+    sudo sed -i '24 a sudo python3 setup.py install' ./mount/etc/rc.local
     sleep 1
 }
 
