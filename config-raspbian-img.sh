@@ -4,9 +4,12 @@
 
 # Mount img file
 # Check offset value: fdisk -lu img-file
+
+[ -z "$PASSWORD" ] && PASSWORD="123"
+
 mount_img() {
     mkdir ./mount
-    sudo mount -t auto -o loop,offset=$((94208*512)) ./2017-11-29-raspbian-stretch-lite.img ./mount
+    echo "$PASSWORD" | sudo -S mount -t auto -o loop,offset=$((94208*512)) ./2017-11-29-raspbian-stretch-lite.img ./mount
     sleep 1
 }
 
