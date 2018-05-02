@@ -89,7 +89,7 @@ do
             git_pyserial_scripts
             ;;
         --ssh)
-            start_ssh
+            ssh_start
             ;;
         --expect)
             install_expect
