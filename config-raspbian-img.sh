@@ -121,3 +121,6 @@ do
             ;;
     esac
 done
+
+# When input parameter is null, it will show help messages
+[ -z $conf ] && show_help
