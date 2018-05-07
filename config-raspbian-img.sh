@@ -32,19 +32,32 @@ ssh_start() {
     sleep 1
 }
 
+# Update apt sources
+update_apt_sources() {
+    sudo sed -i '1s/^/\#/g' ./mount/etc/apt/sources.list
+    sudo sed -i '1 i deb http://mirrors.ustc.edu.cn/raspbian/raspbian/ jessie main contrib non-free rpi' ./mount/etc/apt/sources.list
+
+    sudo sed -i '1s/^/\#/g' ./mount/etc/apt/sources.list.d/raspi.list
+    sudo sed -i '1 i deb http://mirrors.ustc.edu.cn/archive.raspberrypi.org/debian/ jessie main ui' ./mount/etc/apt/sources.list.d/raspi.list
+
+    sudo sed -i '21 a \\t' ./mount/etc/rc.local
+    sudo sed -i '21 a sudo apt update' ./mount/etc/rc.local
+    sleep 1
+}
+
 # Install expect
 install_expect() {
-    sudo sed -i '21 a \\t' ./mount/etc/rc.local
-    sudo sed -i '21 a sudo apt-get install expect -y' ./mount/etc/rc.local
+    sudo sed -i '23 a \\t' ./mount/etc/rc.local
+    sudo sed -i '23 a sudo apt-get install expect -y' ./mount/etc/rc.local
     sleep 1
 }
 
 # Install pyserial
 install_pyserial() {
-    sudo sed -i '23 a \\t' ./mount/etc/rc.local
+    sudo sed -i '25 a \\t' ./mount/etc/rc.local
     dir="cd /home/pi/pyserial"
-    sudo sed -i "23 a $dir" ./mount/etc/rc.local
-    sudo sed -i '24 a sudo python3 setup.py install' ./mount/etc/rc.local
+    sudo sed -i "25 a $dir" ./mount/etc/rc.local
+    sudo sed -i '26 a sudo python3 setup.py install' ./mount/etc/rc.local
     sleep 1
 }
 
@@ -58,8 +71,8 @@ ssh_config() {
 network_config() {
     cp ./network.conf ./mount/home/pi
     cp ./network.sh ./mount/home/pi
-    sudo sed -i '26 a \\t' ./mount/etc/rc.local
-    sudo sed -i '26 a sh /home/pi/network.sh' ./mount/etc/rc.local
+    sudo sed -i '28 a \\t' ./mount/etc/rc.local
+    sudo sed -i '28 a sh /home/pi/network.sh' ./mount/etc/rc.local
     sleep 1
 }
 
@@ -97,6 +110,9 @@ do
         --ssh)
             ssh_start
             ;;
+        --sources)
+            update_apt_sources
+            ;;
         --expect)
             install_expect
             ;;
@@ -113,8 +129,8 @@ do
             umount_img
             ;;
         --all)
-            mount_img && git_pyserial_scripts && ssh_start && install_expect && install_pyserial &&
-            ssh_config && network_config && umount_img
+            mount_img && git_pyserial_scripts && ssh_start && update_apt_sources && install_expect &&
+	    install_pyserial && ssh_config && network_config && umount_img
             ;;
         --help)
             show_help
