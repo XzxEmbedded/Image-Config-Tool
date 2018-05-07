@@ -5,6 +5,9 @@
 # Mount img file
 # Check offset value: fdisk -lu img-file
 
+# Modify install source
+# https://www.cnblogs.com/wangchuanyang/p/6434323.html
+
 mount_img() {
     mkdir ./mount
     # command input sudo password
