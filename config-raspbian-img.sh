@@ -80,6 +80,7 @@ network_config() {
 copy_files() {
     sudo cp ./mount/home/pi/miner-automate-test-scripts/read-miner-info/ip-freq-voltlevel-devid.config ./mount/etc/
     sudo cp ./mount/home/pi/miner-automate-test-scripts/read-miner-info/read-power.py ./mount/usr/local/bin/read-power
+    sudo sed -i 's/ip-freq-voltlevel-devid.config/\/etc\/ip-freq-voltlevel-devid.config/g' ./mount/usr/local/bin/read-power
 }
 
 # Umount img file
