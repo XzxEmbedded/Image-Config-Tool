@@ -76,6 +76,12 @@ network_config() {
     sleep 1
 }
 
+# copy_files
+copy_files() {
+    sudo cp ./mount/home/pi/miner-automate-test-scripts/read-miner-info/ip-freq-voltlevel-devid.config ./mount/etc/
+    sudo cp ./mount/home/pi/miner-automate-test-scripts/read-miner-info/read-power.py ./mount/usr/local/bin/read-power
+}
+
 # Umount img file
 umount_img() {
     sudo umount ./mount
@@ -88,9 +94,11 @@ show_help() {
     --mount         Mount img file
     --git           After img file, git clone pyserial and auto test scripts
     --ssh           After img file, setting ssh
+    --sources       After img file, modify apt sources
     --expect        After img file, install expect
     --pyserial      After img file, install pyserial
     --hostkey       After img file, setting ssh_config
+    --copy          After img file, copy files to the specified directory
     --network       After img file, setting network
     --umount        Umount img file
     --all           Run all steps
@@ -125,12 +133,15 @@ do
         --network)
             network_config
             ;;
+        --copy)
+            copy_files
+            ;;
         --umount)
             umount_img
             ;;
         --all)
             mount_img && git_pyserial_scripts && ssh_start && update_apt_sources && install_expect &&
-	    install_pyserial && ssh_config && network_config && umount_img
+	    install_pyserial && ssh_config && network_config && copy_files && umount_img
             ;;
         --help)
             show_help
