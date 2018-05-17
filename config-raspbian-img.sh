@@ -1,10 +1,12 @@
 #!/bin/bash
 #
 # March 2018 xuzhenxing <xuzhenxing@canaan-creative.com>
-
+#
+# Rpi img download link: https://www.raspberrypi.org/downloads/
+#
 # Mount img file
 # Check offset value: fdisk -lu img-file
-
+#
 # Modify install source
 # https://www.cnblogs.com/wangchuanyang/p/6434323.html
 
