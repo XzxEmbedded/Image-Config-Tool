@@ -19,8 +19,8 @@ openwrt_repo="git://github.com/Canaan-Creative/openwrt-archive.git"
 FEEDS_CONF_URL=https://raw.github.com/XzxEmbedded/Image-Config-Tool/master/openwrt/feeds.conf
 DEV_CONF_URL=https://raw.github.com/XzxEmbedded/Image-Config-Tool/master/openwrt/rpi3.conf
 
-which wget > /dev/null && DL_PROG=wget
-which curl > /dev/null && DL_PROG=curl
+which wget > /dev/null && DL_PROG=wget && DL_PARA="-nv -O"
+which curl > /dev/null && DL_PROG=curl && DL_PARA="-L -o"
 
 # According to http://wiki.openwrt.org/doc/howto/build
 unset SED
@@ -33,13 +33,12 @@ DATE=`date +%Y%m%d`
 SCRIPT_FILE="$(readlink -f $0)"
 SCRIPT_DIR=`dirname ${SCRIPT_FILE}`
 OPENWRT_DIR=${SCRIPT_DIR}/openwrt
-echo $OPENWRT_DIR
 
 # Get OpenWrt source codes
 prepare_source() {
     cd ${SCRIPT_DIR}
     if [ ! -d openwrt ]; then
-        eval OPENWRT_URL=\${owrepo}
+        eval OPENWRT_URL=\${openwrt_repo}
         PROTOCOL="`echo ${OPENWRT_URL} | cut -d : -f 1`"
 
         case "${PROTOCOL}" in
@@ -69,14 +68,14 @@ prepare_source() {
 
 prepare_feeds() {
     cd ${OPENWRT_DIR}
-    $DL_PROG ${FEEDS_CONF_URL} && \
+    $DL_PROG ${FEEDS_CONF_URL} $DL_PARA feeds.conf && \
     ./scripts/feeds update -a && \
     ./scripts/feeds install -a
 }
 
 prepare_config() {
     cd ${OPENWRT_DIR}
-    $DL_PROG ${DEV_CONF_URL}
+    $DL_PROG ${DEV_CONF_URL} $DL_PARA .config
 }
 
 build_image() {
