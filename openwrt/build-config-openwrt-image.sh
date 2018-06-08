@@ -114,7 +114,9 @@ build_image() {
 
 do_release() {
     cd ${SCRIPT_DIR}
-    mkdir ./bin
+    if [ ! -e bin ]; then
+        mkdir ./bin
+    fi
     cp -a ./openwrt/bin/brcm2708/* ./bin/
 }
 
