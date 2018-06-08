@@ -10,7 +10,7 @@
 
 set -e
 
-SCRIPT_VERSION=20180606
+SCRIPT_VERSION='2018-06-06'
 
 # OpenWrt repo
 openwrt_repo="git://github.com/Canaan-Creative/openwrt-archive.git"
@@ -98,7 +98,11 @@ prepare_patch() {
     $DL_PROG ${IPV6_CONF_URL} $DL_PARA ./package/base-files/files/etc/sysctl.conf
 
     # read-power.py file
-    $DL_PROG ${POWER_CONF_URL} $DL_PARA ./package/base-files/files/usr/readpower
+    [ ! -e ${OPENWRT_DIR}/package/base-files/files/usr/bin ] && \
+    mkdir ${OPENWRT_DIR}/package/base-files/files/usr/bin
+
+    $DL_PROG ${POWER_CONF_URL} $DL_PARA ./package/base-files/files/usr/bin/readpower
+    chmod +x ./package/base-files/files/usr/bin/readpower
 }
 
 build_image() {
@@ -108,13 +112,26 @@ build_image() {
     make -j${CORE_NUM} clean world
 }
 
+do_release() {
+    cd ${SCRIPT_DIR}
+    mkdir ./bin
+    cp -a ./openwrt/bin/brcm2708/* ./bin/
+}
+
 cleanup() {
     cd ${ROOT_DIR}
     rm -rf openwrt/ > /dev/null
 }
 
 show_help() {
-    echo "help messages"
+    echo "\
+Usage: $0 [--help] [--build] [--cleanup]
+    --help             Display help message
+    --build            Get .config file and build firmware
+    --cleanup          Remove all files
+
+Written by: Zhenxing Xu <xuzhenxing@canaan-creative.com>
+    Version: ${SCRIPT_VERSION}"
 }
 
 # Paramter is null, display help messages
@@ -131,7 +148,7 @@ do
             exit
             ;;
         --build)
-            prepare_source && prepare_feeds && prepare_config && prepare_patch && build_image
+            prepare_source && prepare_feeds && prepare_config && prepare_patch && build_image && do_release
             ;;
         --cleanup)
             cleanup
