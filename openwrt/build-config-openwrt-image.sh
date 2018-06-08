@@ -15,9 +15,17 @@ SCRIPT_VERSION=20180606
 # OpenWrt repo
 openwrt_repo="git://github.com/Canaan-Creative/openwrt-archive.git"
 
-# OpenWrt feeds
+# OpenWrt config files and read power file
 FEEDS_CONF_URL=https://raw.github.com/XzxEmbedded/Image-Config-Tool/master/openwrt/feeds.conf
 DEV_CONF_URL=https://raw.github.com/XzxEmbedded/Image-Config-Tool/master/openwrt/rpi3.conf
+
+DHCP_CONF_URL=https://raw.github.com/XzxEmbedded/Image-Config-Tool/master/openwrt/etc/config/dhcp
+FIREWALL_CONF_URL=https://raw.github.com/XzxEmbedded/Image-Config-Tool/master/openwrt/etc/config/firewall
+NETWORK_CONF_URL=https://raw.github.com/XzxEmbedded/Image-Config-Tool/master/openwrt/etc/config/network
+
+IPV6_CONF_URL=https://raw.github.com/XzxEmbedded/Image-Config-Tool/master/openwrt/etc/sysctl.conf
+
+POWER_CONF_URL=https://raw.github.com/XzxEmbedded/Image-Config-Tool/master/openwrt/read-power.py
 
 which wget > /dev/null && DL_PROG=wget && DL_PARA="-nv -O"
 which curl > /dev/null && DL_PROG=curl && DL_PARA="-L -o"
@@ -78,6 +86,21 @@ prepare_config() {
     $DL_PROG ${DEV_CONF_URL} $DL_PARA .config
 }
 
+prepare_patch() {
+    cd ${OPENWRT_DIR}
+
+    # /etc/config files
+    $DL_PROG ${DHCP_CONF_URL} $DL_PARA ./package/base-files/files/etc/config/dhcp
+    $DL_PROG ${FIREWALL_CONF_URL} $DL_PARA ./package/base-files/files/etc/config/firewall
+    $DL_PROG ${NETWORK_CONF_URL} $DL_PARA ./package/base-files/files/etc/config/network
+
+    # /etc/sysctl.conf file
+    $DL_PROG ${IPV6_CONF_URL} $DL_PARA ./package/base-files/files/etc/sysctl.conf
+
+    # read-power.py file
+    $DL_PROG ${POWER_CONF_URL} $DL_PARA ./package/base-files/files/usr/readpower
+}
+
 build_image() {
     cd ${OPENWRT_DIR}
     yes "" | make oldconfig > /dev/null
@@ -108,7 +131,7 @@ do
             exit
             ;;
         --build)
-            prepare_source && prepare_feeds && prepare_config && build_image
+            prepare_source && prepare_feeds && prepare_config && prepare_patch && build_image
             ;;
         --cleanup)
             cleanup
