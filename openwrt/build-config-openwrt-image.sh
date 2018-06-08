@@ -27,6 +27,8 @@ IPV6_CONF_URL=https://raw.github.com/XzxEmbedded/Image-Config-Tool/master/openwr
 
 POWER_CONF_URL=https://raw.github.com/XzxEmbedded/Image-Config-Tool/master/openwrt/read-power.py
 
+RC_CONF_URL=https://raw.github.com/XzxEmbedded/Image-Config-Tool/master/openwrt/etc/rc.local
+
 which wget > /dev/null && DL_PROG=wget && DL_PARA="-nv -O"
 which curl > /dev/null && DL_PROG=curl && DL_PARA="-L -o"
 
@@ -103,6 +105,9 @@ prepare_patch() {
 
     $DL_PROG ${POWER_CONF_URL} $DL_PARA ./package/base-files/files/usr/bin/readpower
     chmod +x ./package/base-files/files/usr/bin/readpower
+
+    # /etc/rc.local file
+    $DL_PROG ${RC_CONF_URL} $DL_PARA ./package/base-files/files/etc/rc.local
 }
 
 build_image() {
