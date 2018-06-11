@@ -13,7 +13,7 @@ set -e
 SCRIPT_VERSION='2018-06-06'
 
 # OpenWrt repo
-openwrt_repo="git://github.com/Canaan-Creative/openwrt-archive.git"
+openwrt_repo="git://github.com/openwrt/openwrt.git@a789c0f4"
 
 # OpenWrt config files and read power file
 FEEDS_CONF_URL=https://raw.github.com/XzxEmbedded/Image-Config-Tool/master/openwrt/feeds.conf
