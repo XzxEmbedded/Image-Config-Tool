@@ -20,7 +20,6 @@ FEEDS_CONF_URL=https://raw.github.com/XzxEmbedded/Image-Config-Tool/master/openw
 DEV_CONF_URL=https://raw.github.com/XzxEmbedded/Image-Config-Tool/master/openwrt/rpi3.conf
 
 DHCP_CONF_URL=https://raw.github.com/XzxEmbedded/Image-Config-Tool/master/openwrt/etc/config/dhcp
-FIREWALL_CONF_URL=https://raw.github.com/XzxEmbedded/Image-Config-Tool/master/openwrt/etc/config/firewall
 NETWORK_CONF_URL=https://raw.github.com/XzxEmbedded/Image-Config-Tool/master/openwrt/etc/config/network
 
 IPV6_CONF_URL=https://raw.github.com/XzxEmbedded/Image-Config-Tool/master/openwrt/etc/sysctl.conf
@@ -92,8 +91,10 @@ prepare_patch() {
     cd ${OPENWRT_DIR}
 
     # /etc/config files
+    [ ! -e ${OPENWRT_DIR}/package/base-files/files/etc/config ] && \
+    mkdir ${OPENWRT_DIR}/package/base-files/files/etc/config
+
     $DL_PROG ${DHCP_CONF_URL} $DL_PARA ./package/base-files/files/etc/config/dhcp
-    $DL_PROG ${FIREWALL_CONF_URL} $DL_PARA ./package/base-files/files/etc/config/firewall
     $DL_PROG ${NETWORK_CONF_URL} $DL_PARA ./package/base-files/files/etc/config/network
 
     # /etc/sysctl.conf file
@@ -122,7 +123,7 @@ do_release() {
     if [ ! -e bin ]; then
         mkdir ./bin
     fi
-    cp -a ./openwrt/bin/brcm2708/* ./bin/
+    cp -a ./openwrt/bin/targets/brcm2708/bcm2710/* ./bin/
 }
 
 cleanup() {
