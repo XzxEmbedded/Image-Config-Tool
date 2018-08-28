@@ -6,6 +6,9 @@
 	download image link:
 	https://www.raspberrypi.org/downloads/raspbian/
 
+	raspbian boot files:
+	https://github.com/raspberrypi/firmware/tree/master/boot
+
 ## OpenWrt
 	OpenWrt system support in openwrt directory, Using build and config openwrt img file
 
