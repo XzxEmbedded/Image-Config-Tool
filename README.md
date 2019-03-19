@@ -1,12 +1,12 @@
 # Image config tools
 
-## Raspbian
-	Raspbian system support in raspbian directory, Using config raspbian img file
+## Raspberry
+	Raspberry system support in raspberry directory, Using config raspberry img file
 
 	download image link:
 	https://www.raspberrypi.org/downloads/raspbian/
 
-	raspbian boot files:
+	raspberry boot files:
 	https://github.com/raspberrypi/firmware/tree/master/boot
 
 ## OpenWrt
