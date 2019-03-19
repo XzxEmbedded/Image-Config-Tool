@@ -3,6 +3,8 @@
 # March 2018 xuzhenxing <xuzhenxing@canaan-creative.com>
 #
 # Rpi img download link: https://www.raspberrypi.org/downloads/
+#			 https://people.debian.org/~stapelberg/raspberrypi3/2018-01-08-raspberry-pi-3-buster-PREVIEW.img.xz
+#			 Decompression: xz -d 2018-01-08-raspberry-pi-3-buster-PREVIEW.img.xz
 #
 # Mount img file
 # Check offset value: fdisk -lu img-file
